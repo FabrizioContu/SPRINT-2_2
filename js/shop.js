@@ -99,10 +99,9 @@ function buy(id) {
 
 // Exercise 2
 function cleanCart() {
-  cart.length = 0; 
-  console.log("Carrito limpiado.");
-  console.log(cart);
-
+    cart.length = 0; 
+    console.log("Carrito limpiado.");
+    console.log(cart);
 }
 // Exercise 3
 function calculateTotal() {
