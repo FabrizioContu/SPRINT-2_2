@@ -143,7 +143,43 @@ function applyPromotionsCart() {
 // Exercise 5
 function printCart() {
   // Fill the shopping cart modal manipulating the shopping cart dom
-  
+  total = 0;
+  const $cart = document.getElementById("cart_list"),
+    $totalPrice = document.getElementById("total_price");
+
+  for (let i = 0; i < cart.length; i++) {
+    const $tr = document.createElement("tr"),
+      $th = document.createElement("th"),
+      $tdPrice = document.createElement("td"),
+      $tdQuantity = document.createElement("td"),
+      $tdSubtotal = document.createElement("td");
+
+    $th.setAttribute("scope", "row");
+    $th.innerHTML = cart[i].name;
+    $tdPrice.innerHTML = cart[i].price;
+    $tdQuantity.innerHTML = cart[i].quantity;
+
+    if (cart[i].id === 1 && cart[i].quantity >= 3) {
+      cart[i].price = 10;
+      cart[i].subtotalWithDiscount = cart[i].price * cart[i].quantity;
+    } else if (cart[i].id === 3 && cart[i].quantity > 10) {
+      cart[i].price = 3.5;
+      cart[i].subtotalWithDiscount = cart[i].price * cart[i].quantity;
+    } else {
+      cart[i].subtotal = cart[i].price * cart[i].quantity;
+      cart[i].subtotalWithDiscount = 0;
+    }
+    
+    $tdSubtotal.innerHTML = cart[i].subtotalWithDiscount || cart[i].subtotal;
+    total += cart[i].subtotalWithDiscount + cart[i].subtotal;
+    $totalPrice.innerHTML = total;
+
+    $tr.appendChild($th);
+    $tr.appendChild($tdPrice);
+    $tr.appendChild($tdQuantity);
+    $tr.appendChild($tdSubtotal);
+    $cart.appendChild($tr);
+  }
 }
 
 // ** Nivell II **
