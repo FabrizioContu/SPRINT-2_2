@@ -72,7 +72,7 @@ var cart = [];
 var total = 0;
 
 // Exercise 1
- // Buscamos el producto con el ID proporcionado
+// Buscamos el producto con el ID proporcionado
 function buy(id) {
   let product = 0;
   for (let i = 0; i < products.length; i++) {
@@ -91,7 +91,12 @@ function buy(id) {
       cart[indexExistingProduct].quantity++;
     } else {
       // si no existe, agregamos el producto al array con cantidad de 1
-      cart.push({ ...product, quantity: 1 });
+      cart.push({
+        ...product,
+        quantity: 1,
+        subtotal: 0,
+        subtotalWithDiscount: 0,
+      });
     }
   }
   console.table(cart);
@@ -99,15 +104,16 @@ function buy(id) {
 
 // Exercise 2
 function cleanCart() {
-    cart.length = 0; 
-    console.log("Carrito limpiado.");
-    console.log(cart);
+  cart.length = 0;
+  console.log("Carrito limpiado.");
+  console.log(cart);
 }
 // Exercise 3
-function calculateTotal() {  // puesta función en index.html botón del carrito
+function calculateTotal() {
+  // puesta función en index.html botón del carrito
   // Calculate total price of the cart using the "cartList" array
-  for(let i = 0; i< cart.length; i++){
-    total += cart[i].price*cart[i].quantity;
+  for (let i = 0; i < cart.length; i++) {
+    total += cart[i].price * cart[i].quantity;
   }
   return console.log(`Total price of the cart: ${total.toFixed(2)}€`);
 }
@@ -115,11 +121,29 @@ function calculateTotal() {  // puesta función en index.html botón del carrito
 // Exercise 4
 function applyPromotionsCart() {
   // Apply promotions to each item in the array "cart"
+  total = 0;
+  for (let i = 0; i < cart.length; i++) {
+    if (cart[i].id === 1 && cart[i].quantity >= 3) {
+      cart[i].price = 10;
+      cart[i].subtotalWithDiscount = cart[i].price * cart[i].quantity;
+    } else if (cart[i].id === 3 && cart[i].quantity > 10) {
+      cart[i].price = 3.5;
+      cart[i].subtotalWithDiscount = cart[i].price * cart[i].quantity;
+    } else {
+      cart[i].subtotal = cart[i].price * cart[i].quantity;
+      cart[i].subtotalWithDiscount = 0;
+    }
+    total += cart[i].subtotalWithDiscount + cart[i].subtotal;
+  }
+  console.table(cart);
+
+  console.log(`Total price of the cart: ${total.toFixed(2)}€`);
 }
 
 // Exercise 5
 function printCart() {
   // Fill the shopping cart modal manipulating the shopping cart dom
+  
 }
 
 // ** Nivell II **
@@ -128,6 +152,7 @@ function printCart() {
 function removeFromCart(id) {
   // 1. Loop for to the array products to get the item to add to cart
   // 2. Add found product to the cartList array
+
 }
 
 function open_modal() {
