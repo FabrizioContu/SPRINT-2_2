@@ -105,8 +105,10 @@ function buy(id) {
 // Exercise 2
 function cleanCart() {
   cart.length = 0;
-  console.log("Carrito limpiado.");
+  total = 0;
   console.log(cart);
+  printCart(); // para que el carrito refleje el precio en "0"
+  alert("Carrito limpiado.");
 }
 // Exercise 3
 function calculateTotal() {
@@ -115,9 +117,9 @@ function calculateTotal() {
   for (let i = 0; i < cart.length; i++) {
     total += cart[i].price * cart[i].quantity;
   }
-  return console.log(`Total price of the cart: ${total.toFixed(2)}€`);
+  return total;
 }
-
+console.log(`Total price of the cart: ${total.toFixed(2)}€`);
 // Exercise 4
 function applyPromotionsCart() {
   // Apply promotions to each item in the array "cart"
@@ -136,50 +138,53 @@ function applyPromotionsCart() {
     total += cart[i].subtotalWithDiscount + cart[i].subtotal;
   }
   console.table(cart);
-
   console.log(`Total price of the cart: ${total.toFixed(2)}€`);
 }
 
 // Exercise 5
 function printCart() {
   // Fill the shopping cart modal manipulating the shopping cart dom
-  total = 0;
-  const $cart = document.getElementById("cart_list"),
-    $totalPrice = document.getElementById("total_price");
+  applyPromotionsCart();
 
+  const $cart = document.getElementById("cart_list");
+  $cart.innerHTML = "";
+
+  total = 0;
   for (let i = 0; i < cart.length; i++) {
     const $tr = document.createElement("tr"),
       $th = document.createElement("th"),
       $tdPrice = document.createElement("td"),
       $tdQuantity = document.createElement("td"),
-      $tdSubtotal = document.createElement("td");
+      $tdSubtotal = document.createElement("td"),
+      $tdRemove = document.createElement("td"),
+      $removeButton = document.createElement("button");
 
     $th.setAttribute("scope", "row");
+    $removeButton.getAttribute("style");
+    $removeButton.setAttribute("type", "button");
+    $removeButton.setAttribute("color", "primary");
+    $removeButton.style.borderRadius = "0.5rem";
+    $removeButton.addEventListener("click", () => removeFromCart(cart[i].id));
+    $tdSubtotal.style.textAlign = "center";
+    $tdQuantity.style.textAlign = "center";
+
     $th.innerHTML = cart[i].name;
     $tdPrice.innerHTML = cart[i].price;
     $tdQuantity.innerHTML = cart[i].quantity;
-
-    if (cart[i].id === 1 && cart[i].quantity >= 3) {
-      cart[i].price = 10;
-      cart[i].subtotalWithDiscount = cart[i].price * cart[i].quantity;
-    } else if (cart[i].id === 3 && cart[i].quantity > 10) {
-      cart[i].price = 3.5;
-      cart[i].subtotalWithDiscount = cart[i].price * cart[i].quantity;
-    } else {
-      cart[i].subtotal = cart[i].price * cart[i].quantity;
-      cart[i].subtotalWithDiscount = 0;
-    }
-    
+    $removeButton.innerHTML = "Remove";
     $tdSubtotal.innerHTML = cart[i].subtotalWithDiscount || cart[i].subtotal;
     total += cart[i].subtotalWithDiscount + cart[i].subtotal;
-    $totalPrice.innerHTML = total;
 
     $tr.appendChild($th);
     $tr.appendChild($tdPrice);
     $tr.appendChild($tdQuantity);
     $tr.appendChild($tdSubtotal);
+    $tr.appendChild($tdRemove);
+    $tdRemove.appendChild($removeButton);
     $cart.appendChild($tr);
   }
+  const $totalPrice = document.getElementById("total_price");
+  $totalPrice.innerHTML = total.toFixed(2) + "€";
 }
 
 // ** Nivell II **
@@ -188,7 +193,41 @@ function printCart() {
 function removeFromCart(id) {
   // 1. Loop for to the array products to get the item to add to cart
   // 2. Add found product to the cartList array
+  let removeItem = null;
+  for (let i = 0; i < cart.length; i++) {
+    if (id === cart[i].id) {
+      removeItem = cart[i];
+    }
+  }
+  if (removeItem !== null) {
+    let indexExistingItem = cart.findIndex((item) => {
+      return item.id === id;
+    });
+    if (indexExistingItem !== -1) {
+      cart[indexExistingItem].quantity--;
 
+      if (cart[indexExistingItem].quantity === 0) {
+        cart.splice(indexExistingItem, 1);
+      } else if (
+        cart[indexExistingItem].quantity < 3 &&
+        cart[indexExistingItem].id === 1
+      ) {
+        cart[indexExistingItem].price = 10.5;
+        cart[indexExistingItem].subtotalWithDiscount = 0;
+      } else if (
+        cart[indexExistingItem].quantity <= 10 &&
+        cart[indexExistingItem].id === 3
+      ) {
+        cart[indexExistingItem].price = 5;
+        cart[indexExistingItem].subtotalWithDiscount = 0;
+      }
+      applyPromotionsCart();
+    }
+    printCart();
+  } else {
+    console.log("Product not found");
+  }
+  console.table(cart);
 }
 
 function open_modal() {
