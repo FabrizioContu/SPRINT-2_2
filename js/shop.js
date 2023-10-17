@@ -114,8 +114,10 @@ function cleanCart() {
 function calculateTotal() {
   // puesta función en index.html botón del carrito
   // Calculate total price of the cart using the "cartList" array
+
   for (let i = 0; i < cart.length; i++) {
     total += cart[i].price * cart[i].quantity;
+   
   }
   return total;
 }
@@ -137,6 +139,7 @@ function applyPromotionsCart() {
     }
     total += cart[i].subtotalWithDiscount + cart[i].subtotal;
   }
+  
   console.table(cart);
   console.log(`Total price of the cart: ${total.toFixed(2)}€`);
 }
