@@ -112,13 +112,12 @@ function cleanCart() {
 }
 // Exercise 3
 function calculateTotal() {
-  // puesta función en index.html botón del carrito
-  // Calculate total price of the cart using the "cartList" array
+  total = 0; 
 
-  for (let i = 0; i < cart.length; i++) {
-    total += cart[i].price * cart[i].quantity;
-   
+  for (const item of cart) {
+    total += item.price * item.quantity;
   }
+
   return total;
 }
 console.log(`Total price of the cart: ${total.toFixed(2)}€`);
